@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#f2efe7" />
+<title>TYPE RIOT — Turn words into art</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f2efe7;--ink:#090909;--red:#ff3d16;--pink:#ff5bc8;--lime:#c9ff35;--line:rgba(9,9,9,.2);--mono:"DM Mono",monospace;--sans:"Space Grotesk",sans-serif;--display:"Anton",Impact,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 3vw;border-bottom:1px solid var(--line);gap:24px}
+.logo{font-family:var(--display);font-size:25px;line-height:.8;letter-spacing:-.7px;max-width:80px}
+.nav{display:flex;gap:clamp(18px,4vw,65px);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.nav a{padding:10px 0;position:relative}.nav a:after{content:"";position:absolute;bottom:3px;left:0;width:0;height:2px;background:var(--red);transition:width .2s}.nav a:hover:after{width:100%}
+.tagline{font:10px/1.3 var(--mono);letter-spacing:.04em;text-align:right;text-transform:uppercase}
+.pill{border:0;background:var(--ink);color:white;border-radius:100px;padding:13px 19px;font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em;display:inline-flex;gap:10px;align-items:center;justify-content:center;transition:transform .2s,background .2s}
+.pill:hover{transform:translateY(-2px);background:var(--red)}
+.pill .spark{font-size:19px;line-height:0}
+.hero{min-height:560px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(260px,.8fr) 245px;gap:2vw;padding:34px 3vw 28px;align-items:stretch;border-bottom:1px solid var(--line)}
+.hero-copy{display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.kicker{font:11px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.headline{font-family:var(--display);font-size:clamp(64px,8.3vw,142px);line-height:.78;letter-spacing:-.025em;text-transform:uppercase;margin:12px 0 25px}
+.headline span{display:block;white-space:nowrap}.headline .art{color:var(--red);font-style:italic;font-family:var(--sans);font-weight:700;letter-spacing:-.09em;transform:rotate(-5deg);font-size:.95em;margin-left:34%;line-height:.94;position:relative}
+.headline .art:after{content:"";position:absolute;left:-3%;right:0;bottom:3%;height:7px;background:var(--red);transform:rotate(-3deg);border-radius:100%;opacity:.8}
+.intro{font:12px/1.65 var(--mono);max-width:290px;margin:0 0 20px}
+.start-link{display:flex;align-items:center;gap:14px;font:11px var(--mono);text-transform:uppercase;letter-spacing:.1em;font-weight:500}
+.circle-arrow{height:43px;width:43px;display:grid;place-items:center;border-radius:50%;background:var(--ink);color:white;font-size:22px;transition:transform .25s}.start-link:hover .circle-arrow{transform:rotate(-45deg);background:var(--red)}
+.art-stage{position:relative;display:grid;place-items:center;min-width:0;overflow:hidden}
+.cross{position:absolute;font:32px var(--sans);font-weight:200}.cross.a{top:0;left:3%}.cross.b{top:0;right:4%}.cross.c{bottom:0;left:4%}.cross.d{bottom:0;right:4%}
+.poster-word{position:relative;max-width:100%;font-family:var(--display);font-size:clamp(64px,9vw,145px);line-height:.8;text-align:center;overflow-wrap:anywhere;letter-spacing:-.035em;text-transform:uppercase;transform:rotate(-5deg);filter:contrast(1.1);transition:transform .5s,color .3s;cursor:grab;user-select:none}
+.poster-word:before{content:"";position:absolute;inset:-7% -5%;background:repeating-linear-gradient(96deg,transparent 0 12px,rgba(242,239,231,.1) 12px 15px);mix-blend-mode:screen;pointer-events:none}
+.burst{position:absolute;color:var(--red);font-size:100px;right:0;top:34%;transform:rotate(12deg);animation:twirl 16s linear infinite}
+@keyframes twirl{to{transform:rotate(372deg)}}
+.controls{border-left:1px solid var(--line);padding:10px 0 0 25px;display:flex;flex-direction:column;gap:15px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label,.field-title{font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+input[type=text],select{width:100%;border:1px solid var(--line);border-radius:100px;background:transparent;padding:11px 14px;font:12px var(--mono);outline:none;color:var(--ink)}
+input[type=text]:focus,select:focus{border-color:var(--red);box-shadow:0 0 0 2px rgba(255,61,22,.12)}
+select{appearance:auto}
+.range-head{display:flex;justify-content:space-between;align-items:center}
+.range-head output{font:10px var(--mono)}
+input[type=range]{width:100%;accent-color:var(--ink);margin:2px 0}
+.swatches{display:flex;gap:10px;align-items:center}
+.swatch{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);padding:0;transition:transform .15s}
+.swatch.active{outline:1px solid var(--ink);outline-offset:3px;transform:scale(.9)}
+.bg-swatches .swatch{width:22px;height:22px}
+.controls .pill{width:100%;margin-top:1px}
+.gallery{padding:0 3vw 36px;display:grid;grid-template-columns:52px repeat(5,minmax(0,1fr));gap:14px}
+.gallery-label{border-right:1px solid var(--line);writing-mode:vertical-rl;transform:rotate(180deg);font:10px var(--mono);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.gallery-label span:first-child{font-size:26px}
+.sample{min-height:250px;aspect-ratio:.8;position:relative;overflow:hidden;padding:15px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s;cursor:pointer}
+.sample:hover{transform:translateY(-5px) rotate(-.5deg)}
+.sample small{font:8px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;max-width:100px}
+.sample strong{font-family:var(--display);font-size:clamp(35px,5.2vw,75px);line-height:.78;letter-spacing:-.03em;text-transform:uppercase;overflow-wrap:anywhere}
+.sample .sample-foot{font:8px var(--mono);display:flex;justify-content:space-between;text-transform:uppercase}
+.sample.one{background:#e7e0d2;color:#050505}.sample.one strong{font-family:var(--display);font-style:italic;transform:rotate(-7deg);font-size:clamp(38px,5.4vw,78px)}
+.sample.two{background:var(--red);color:#f6f1e8}.sample.two strong{font-family:var(--display);font-size:clamp(38px,5.1vw,76px)}
+.sample.three{background:#050505;color:var(--pink)}.sample.three strong{font-family:var(--display);transform:rotate(-9deg);font-size:clamp(40px,5.3vw,78px)}
+.sample.four{background:#e7e0d2;color:#090909}.sample.four strong{font-size:clamp(35px,4.8vw,68px)}
+.sample.five{background:#ff9bd2;color:#090909}.sample.five strong{font-family:"Archivo Black",sans-serif;font-size:clamp(32px,4.7vw,68px)}
+.sample .scribble{position:absolute;font-size:70px;right:10px;bottom:32px;line-height:1;pointer-events:none}
+.sample.two .scribble{color:#090909;transform:rotate(-20deg)}.sample.three .scribble{color:white}.sample.four .scribble{color:var(--lime);font-size:100px;transform:rotate(-18deg)}
+.about{padding:90px 7vw 100px;background:var(--ink);color:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:start}
+.about h2{font-family:var(--display);font-size:clamp(50px,8vw,120px);line-height:.82;text-transform:uppercase;margin:0;letter-spacing:-.025em}
+.about h2 span{color:var(--red)}
+.about p{font:13px/1.8 var(--mono);max-width:470px;margin:8px 0 28px}
+.about .pill{background:var(--paper);color:var(--ink)}.about .pill:hover{background:var(--red);color:white}
+footer{display:flex;justify-content:space-between;gap:20px;padding:24px 3vw;font:10px var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--ink);color:white;padding:13px 18px;border-radius:100px;font:11px var(--mono);z-index:5;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1100px){.hero{grid-template-columns:minmax(0,1fr) minmax(220px,.8fr);}.controls{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);padding:20px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.controls .pill{align-self:end}.gallery{grid-template-columns:35px repeat(3,minmax(0,1fr))}.sample:nth-last-child(-n+2){display:none}}
+@media(max-width:650px){.topbar{height:68px;padding:0 5vw}.logo{font-size:22px}.nav{gap:14px;font-size:9px}.tagline{display:none}.topbar>.pill{padding:11px 13px;font-size:9px}.hero{padding:25px 5vw 24px;grid-template-columns:1fr;gap:24px}.headline{font-size:clamp(63px,16vw,105px);margin:14px 0 20px}.headline .art{margin-left:22%;font-size:.88em}.hero-copy{min-height:335px}.art-stage{min-height:260px}.poster-word{font-size:clamp(90px,23vw,145px);max-width:90%}.burst{right:8%;font-size:72px}.controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.controls .pill{grid-column:1/-1}.gallery{padding:0 5vw 28px;grid-template-columns:25px repeat(2,minmax(0,1fr));gap:9px}.sample{min-height:210px;padding:11px}.sample:nth-last-child(-n+3){display:none}.sample strong{font-size:clamp(38px,10vw,64px)!important}.gallery-label{font-size:8px}.about{padding:65px 6vw;grid-template-columns:1fr;gap:30px}.about h2{font-size:clamp(60px,17vw,100px)}footer{padding:20px 5vw;font-size:8px;flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="#" aria-label="Type Riot home">TYPE<br>RIOT</a>
+  <nav class="nav" aria-label="Main navigation"><a href="#create">Create</a><a href="#gallery">Gallery</a><a href="#about">About</a></nav>
+  <div class="tagline">Good type makes<br>bad ideas look good.</div>
+  <button class="pill" id="randomTop"><span class="spark">✳</span> Random</button>
+</header>
+
+<main>
+<section class="hero" id="create">
+  <div class="hero-copy">
+    <div>
+      <div class="kicker" id="counter">01 / 04</div>
+      <h1 class="headline"><span>Turn words</span><span>into</span><span class="art">art</span></h1>
+    </div>
+    <div>
+      <p class="intro">Type Riot is a creative playground for experimental typography. Type a word, play with styles, and watch it transform into something unexpected.</p>
+      <a class="start-link" href="#controls"><span class="circle-arrow">↗</span> Start creating</a>
+    </div>
+  </div>
+
+  <div class="art-stage" aria-label="Live typography preview">
+    <span class="cross a">＋</span><span class="cross b">＋</span><span class="cross c">＋</span><span class="cross d">＋</span>
+    <div class="poster-word" id="preview" role="img" aria-label="Your live typography preview">DREAM</div>
+    <div class="burst" aria-hidden="true">✳</div>
+  </div>
+
+  <aside class="controls" id="controls" aria-label="Typography controls">
+    <div class="field"><label for="word">Your word</label><input id="word" type="text" value="DREAM" maxlength="24" placeholder="Type something..." /></div>
+    <div class="field"><label for="style">Font style</label><select id="style"><option value="distort">Aa &nbsp; Distort</option><option value="condensed">Aa &nbsp; Condensed</option><option value="block">Aa &nbsp; Block</option><option value="soft">Aa &nbsp; Soft</option><option value="mono">Aa &nbsp; Mono</option><option value="serif">Aa &nbsp; Editorial</option></select></div>
+    <div class="field"><label for="weight">Weight</label><select id="weight"><option value="900">Aa &nbsp; Black</option><option value="700">Aa &nbsp; Bold</option><option value="500">Aa &nbsp; Medium</option><option value="400">Aa &nbsp; Regular</option></select></div>
+    <div class="field"><div class="range-head"><label for="spacing">Spacing</label><output id="spacingOut">-4</output></div><input id="spacing" type="range" min="-15" max="20" value="-4" /></div>
+    <div class="field"><div class="range-head"><label for="rotation">Rotation</label><output id="rotationOut">-5°</output></div><input id="rotation" type="range" min="-20" max="20" value="-5" /></div>
+    <div class="field"><div class="field-title">Color</div><div class="swatches" id="colors"><button class="swatch active" data-color="#090909" style="background:#090909" aria-label="Black"></button><button class="swatch" data-color="#ff3d16" style="background:#ff3d16" aria-label="Red orange"></button><button class="swatch" data-color="#ff5bc8" style="background:#ff5bc8" aria-label="Pink"></button><button class="swatch" data-color="#244bff" style="background:#244bff" aria-label="Blue"></button><button class="swatch" data-color="#c9ff35" style="background:#c9ff35" aria-label="Lime"></button></div></div>
+    <div class="field"><div class="field-title">Background</div><div class="swatches bg-swatches" id="backgrounds"><button class="swatch active" data-bg="#f2efe7" style="background:#f2efe7" aria-label="Paper"></button><button class="swatch" data-bg="#090909" style="background:#090909" aria-label="Black"></button><button class="swatch" data-bg="#ff3d16" style="background:#ff3d16" aria-label="Orange"></button><button class="swatch" data-bg="#ff9bd2" style="background:#ff9bd2" aria-label="Pink"></button></div></div>
+    <button class="pill" id="generate">⟳ &nbsp; Generate</button>
+  </aside>
+</section>
+
+<section class="gallery" id="gallery" aria-label="Typography poster examples">
+  <div class="gallery-label"><span>✳</span><span>Some more examples</span><span>↕</span></div>
+  <article class="sample one" data-word="CHAOS" data-color="#090909" data-bg="#e7e0d2"><small>Chaos<br>creates<br>creativity</small><strong>Chaos</strong><span class="scribble">✳</span><div class="sample-foot"><span>Type Riot<br>Est. 2025</span><span>01</span></div></article>
+  <article class="sample two" data-word="GOOD VIBES" data-color="#f2efe7" data-bg="#ff3d16"><small>Same word.<br>Different energy.</small><strong>Good<br>Vibes</strong><span class="scribble">〰</span><div class="sample-foot"><span>Type Riot<br>Est. 2025</span><span>02</span></div></article>
+  <article class="sample three" data-word="FLOW" data-color="#ff5bc8" data-bg="#090909"><small>Let<br>things<br>flow</small><strong>Flow</strong><span class="scribble">✳</span><div class="sample-foot"><span>Type Riot<br>Est. 2025</span><span>03</span></div></article>
+  <article class="sample four" data-word="BREATHE" data-color="#090909" data-bg="#e7e0d2"><small>Slow down.<br>It looks better<br>that way.</small><strong>Breathe</strong><span class="scribble">〰</span><div class="sample-foot"><span>Type Riot<br>Est. 2025</span><span>04</span></div></article>
+  <article class="sample five" data-word="MAKE IT WEIRD" data-color="#090909" data-bg="#ff9bd2"><small>Normal<br>is overrated.</small><strong>Make<br>it weird</strong><span class="scribble">✳</span><div class="sample-foot"><span>Type Riot<br>Est. 2025</span><span>05</span></div></article>
+</section>
+
+<section class="about" id="about">
+  <h2>Words are<br>not <span>just</span><br>words.</h2>
+  <div><p>TYPE RIOT is a tiny rebellion against boring type. A place to play, break the rules, make a mess, and turn a few letters into a whole mood.</p><p>Pick a word. Bend the rules. Make something that feels like you.</p><a class="pill" href="#create">Make something weird ↗</a></div>
+</section>
+</main>
+<footer><span>© TYPE RIOT — EXPERIMENT FREELY</span><span>MADE FOR THE LOVE OF LETTERS</span><a href="#create">BACK TO TOP ↑</a></footer>
+<div class="toast" id="toast" role="status" aria-live="polite">Poster updated.</div>
+<script>
+const preview=document.getElementById('preview'), word=document.getElementById('word'), style=document.getElementById('style'), weight=document.getElementById('weight'), spacing=document.getElementById('spacing'), rotation=document.getElementById('rotation'), spacingOut=document.getElementById('spacingOut'), rotationOut=document.getElementById('rotationOut'), toast=document.getElementById('toast');
+let chosenColor='#090909', chosenBg='#f2efe7', toastTimer;
+const styles={
+ distort:{fontFamily:'Anton, Impact, sans-serif',fontStyle:'italic',transformExtra:'scaleY(1.08)'},
+ condensed:{fontFamily:'Anton, Impact, sans-serif',fontStyle:'normal',transformExtra:'scaleX(.78)'},
+ block:{fontFamily:'"Archivo Black", sans-serif',fontStyle:'normal',transformExtra:'scaleY(1)'},
+ soft:{fontFamily:'"Space Grotesk", sans-serif',fontStyle:'normal',transformExtra:'scaleX(1)'},
+ mono:{fontFamily:'"DM Mono", monospace',fontStyle:'normal',transformExtra:'scaleX(1)'},
+ serif:{fontFamily:'Georgia, serif',fontStyle:'italic',transformExtra:'scaleX(1)'}
+};
+function update(){
+ const val=word.value.trim()||'TYPE'; preview.textContent=val.toUpperCase();
+ const s=styles[style.value]||styles.distort;
+ preview.style.fontFamily=s.fontFamily; preview.style.fontStyle=s.fontStyle; preview.style.fontWeight=weight.value;
+ preview.style.letterSpacing=spacing.value+'px'; preview.style.color=chosenColor;
+ preview.style.transform=`rotate(${rotation.value}deg) ${s.transformExtra}`;
+ document.querySelector('.art-stage').style.background=chosenBg;
+ preview.style.fontSize=`clamp(42px, ${Math.max(5,Math.min(14, 68/Math.max(1,val.length)))}vw, 145px)`;
+ if(chosenBg==='#090909') preview.style.color=chosenColor==='#090909'?'#f2efe7':chosenColor;
+ spacingOut.textContent=spacing.value; rotationOut.textContent=rotation.value+'°';
+ document.querySelectorAll('#colors .swatch').forEach(b=>b.classList.toggle('active',b.dataset.color===chosenColor));
+ document.querySelectorAll('#backgrounds .swatch').forEach(b=>b.classList.toggle('active',b.dataset.bg===chosenBg));
+}
+function notify(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),1800)}
+[word,style,weight,spacing,rotation].forEach(el=>el.addEventListener('input',update));
+document.getElementById('colors').addEventListener('click',e=>{const b=e.target.closest('[data-color]');if(b){chosenColor=b.dataset.color;update()}});
+document.getElementById('backgrounds').addEventListener('click',e=>{const b=e.target.closest('[data-bg]');if(b){chosenBg=b.dataset.bg;update()}});
+const words=['CHAOS','SOFTNESS','NO SIGNAL','DAYDREAM','LOUDER','PLAY MORE','ODDLY','FEEL IT','WILD TYPE','UNFOLD'];
+function randomize(){
+ word.value=words[Math.floor(Math.random()*words.length)];
+ style.value=Object.keys(styles)[Math.floor(Math.random()*Object.keys(styles).length)];
+ weight.value=['900','700','500'][Math.floor(Math.random()*3)];
+ spacing.value=Math.floor(Math.random()*30)-12; rotation.value=Math.floor(Math.random()*31)-15;
+ const cs=['#090909','#ff3d16','#ff5bc8','#244bff','#c9ff35'];chosenColor=cs[Math.floor(Math.random()*cs.length)];
+ const bgs=['#f2efe7','#090909','#ff3d16','#ff9bd2'];chosenBg=bgs[Math.floor(Math.random()*bgs.length)];
+ update();notify('Fresh type energy.');
+}
+document.getElementById('generate').addEventListener('click',()=>{update();notify('Your poster is ready to play.')});
+document.getElementById('randomTop').addEventListener('click',randomize);
+document.querySelectorAll('.sample').forEach(card=>card.addEventListener('click',()=>{
+ word.value=card.dataset.word;chosenColor=card.dataset.color;chosenBg=card.dataset.bg;
+ style.value=card.classList.contains('three')?'distort':card.classList.contains('four')?'condensed':'block';
+ rotation.value=card.classList.contains('two')?-2:card.classList.contains('three')?-10:0;spacing.value=-3;update();
+ document.getElementById('create').scrollIntoView({behavior:'smooth'});notify('Loaded poster: '+card.dataset.word+'.');
+}));
+document.querySelector('.poster-word').addEventListener('click',()=>{rotation.value=Number(rotation.value)+5;if(Number(rotation.value)>20)rotation.value=-20;update()});
+update();
+</script>
+</body>
+</html>
